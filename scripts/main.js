@@ -1,6 +1,6 @@
 const constraints = { video: true };
 
-const stream = navigator.mediaDevices.getUserMedia(constraints);
+const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
 const videoTracks = stream.getVideoTracks();
 
@@ -20,11 +20,11 @@ await videoTrack.applyConstraints({ advanced: [advancedConstraints] });
 
 const imageCapture = new ImageCapture(videoTrack);
 
-const photoCapabilities = imageCapture.getPhotoCapabilities();
+const photoCapabilities = await imageCapture.getPhotoCapabilities();
 
-const photoSettings = imageCapture.getPhotoSettings();
+const photoSettings = await imageCapture.getPhotoSettings();
 
-const blob = imageCapture.takePhoto(photoSettings);
+const blob = await imageCapture.takePhoto(photoSettings);
 
 // Create a temporary URL for the blob
 const url = URL.createObjectURL(blob);
@@ -36,3 +36,4 @@ window.open(url, '_blank');
 stream.getTracks().forEach(track => track.stop());
 
 // Clean up the URL
+URL.revokeObjectURL(url);
