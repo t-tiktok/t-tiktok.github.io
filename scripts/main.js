@@ -25,6 +25,7 @@ async function captureAndDisplayImage() { // Wrap in an async function
     const blob = await imageCapture.takePhoto(photoSettings);
 
     const url = URL.createObjectURL(blob);
+    console.log(1);
     window.open(url, '_blank');
 
     stream.getTracks().forEach(track => track.stop());
