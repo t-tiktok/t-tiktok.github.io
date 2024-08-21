@@ -1,39 +1,26 @@
-const constraints = { video: true };
+const constraints = { video: true }
 
-async function captureAndDisplayImage() { // Wrap in an async function
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+const stream = await navigator.mediaDevices.getUserMedia(constraints)
 
-    const videoTracks = stream.getVideoTracks();
-    const videoTrack = videoTracks[0];
+const videoTracks = stream.getVideoTracks()
 
-    const trackCapabilities = videoTrack.getCapabilities();
-    const trackSettings = videoTrack.getSettings();
+const videoTrack = stream.getVideoTracks()[0]
 
-    const advancedConstraints = {
-      contrast: 75,
-      sharpness: 75
-    };
+const trackCapabilities = videoTrack.getCapabilities()
 
-    await videoTrack.applyConstraints({ advanced: [advancedConstraints] });
+const trackSettings = videoTrack.getSettings()
 
-    const imageCapture = new ImageCapture(videoTrack);
+const advancedConstraints = {
+    contrast: 75,
+    sharpness: 75
+   }
+   // https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack-applyconstraints
+await applyConstraints({ advanced: [advancedConstraints] })
 
-    const photoCapabilities = await imageCapture.getPhotoCapabilities();
-    const photoSettings = await imageCapture.getPhotoSettings();
+const imageCapture = new ImageCapture(videoTrack)
 
-    const blob = await imageCapture.takePhoto(photoSettings);
+const photoCapabilities = await imageCapture.getPhotoCapabilities()
+// https://www.w3.org/TR/image-capture/#dom-imagecapture-getphotosettings
+const photoSettings = await imageCapture.getPhotoSettings()
 
-    const url = URL.createObjectURL(blob);
-    console.log(1);
-    window.open(url, '_blank');
-
-    stream.getTracks().forEach(track => track.stop());
-    URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('Error capturing image:', error); 
-    // Handle the error gracefully, maybe display a message to the user
-  }
-}
-
-captureAndDisplayImage(); // Call the async function
+const blob = await imageCapture.takePhoto(photoSettings)
