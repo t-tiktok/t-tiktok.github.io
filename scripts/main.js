@@ -24,3 +24,14 @@ const photoCapabilities = await imageCapture.getPhotoCapabilities()
 const photoSettings = await imageCapture.getPhotoSettings()
 
 const blob = await imageCapture.takePhoto(photoSettings)
+
+const url = URL.createObjectURL(blob);
+
+// Display the image in a new window or tab
+window.open(url, '_blank');
+
+// Close the stream
+stream.getTracks().forEach(track => track.stop());
+
+// Clean up the URL
+URL.revokeObjectURL(url);
