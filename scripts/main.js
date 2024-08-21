@@ -1,39 +1,38 @@
 const constraints = { video: true };
 
-const stream = await navigator.mediaDevices.getUserMedia(constraints);
+async function captureAndDisplayImage() { // Wrap in an async function
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
-const videoTracks = stream.getVideoTracks();
+    const videoTracks = stream.getVideoTracks();
+    const videoTrack = videoTracks[0];
 
-const videoTrack = stream.getVideoTracks()[0];
+    const trackCapabilities = videoTrack.getCapabilities();
+    const trackSettings = videoTrack.getSettings();
 
-const trackCapabilities = videoTrack.getCapabilities();
+    const advancedConstraints = {
+      contrast: 75,
+      sharpness: 75
+    };
 
-const trackSettings = videoTrack.getSettings();
+    await videoTrack.applyConstraints({ advanced: [advancedConstraints] });
 
-const advancedConstraints = {
-    contrast: 75,
-    sharpness: 75
-};
+    const imageCapture = new ImageCapture(videoTrack);
 
-// Apply advanced constraints
-await videoTrack.applyConstraints({ advanced: [advancedConstraints] });
+    const photoCapabilities = await imageCapture.getPhotoCapabilities();
+    const photoSettings = await imageCapture.getPhotoSettings();
 
-const imageCapture = new ImageCapture(videoTrack);
+    const blob = await imageCapture.takePhoto(photoSettings);
 
-const photoCapabilities = await imageCapture.getPhotoCapabilities();
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
 
-const photoSettings = await imageCapture.getPhotoSettings();
+    stream.getTracks().forEach(track => track.stop());
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error capturing image:', error); 
+    // Handle the error gracefully, maybe display a message to the user
+  }
+}
 
-const blob = await imageCapture.takePhoto(photoSettings);
-
-// Create a temporary URL for the blob
-const url = URL.createObjectURL(blob);
-
-// Display the image in a new window or tab
-window.open(url, '_blank');
-
-// Close the stream
-stream.getTracks().forEach(track => track.stop());
-
-// Clean up the URL
-URL.revokeObjectURL(url);
+captureAndDisplayImage(); // Call the async function
