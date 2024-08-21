@@ -20,11 +20,11 @@ await videoTrack.applyConstraints({ advanced: [advancedConstraints] });
 
 const imageCapture = new ImageCapture(videoTrack);
 
-const photoCapabilities = await imageCapture.getPhotoCapabilities();
+const photoCapabilities = imageCapture.getPhotoCapabilities();
 
-const photoSettings = await imageCapture.getPhotoSettings();
+const photoSettings = imageCapture.getPhotoSettings();
 
-const blob = await imageCapture.takePhoto(photoSettings);
+const blob = imageCapture.takePhoto(photoSettings);
 
 // Create a temporary URL for the blob
 const url = URL.createObjectURL(blob);
