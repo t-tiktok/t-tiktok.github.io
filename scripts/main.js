@@ -1,6 +1,6 @@
 const constraints = { video: true };
 
-const stream = await navigator.mediaDevices.getUserMedia(constraints);
+const stream = navigator.mediaDevices.getUserMedia(constraints);
 
 const videoTracks = stream.getVideoTracks();
 
